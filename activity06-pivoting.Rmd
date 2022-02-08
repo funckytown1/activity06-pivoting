@@ -1,6 +1,6 @@
 ---
 title: "Activity 6"
-author: "Name"
+author: "Nathan Funckes"
 output: github_document
 ---
 
@@ -46,7 +46,12 @@ Now, why is `by_speaker` untidy data?
 How would this data be organized if it were tidy?
 Do not use any of your new `{tidyr}` skills yet, only describe it.
 
-**Response**: 
+```{r}
+by_speaker
+```
+
+
+**Response**: it is untidy data because the variable *Season* is spread across multiple columns and *Words* count is stored within the cell values for these columns.
 
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any questions, contact your instructor. Otherwise feel free to continue on.
@@ -82,6 +87,17 @@ Remember that you can view the help documentation by using the `?` method in you
 2. Assign your reformatted dataset to `friends_tidy`, and 
 3. Name your code chunk either `pivot_contains` or `pivot_ends` depending on which helper function you used.
 
+```{r contains}
+friends_tidy <- by_speaker %>% 
+  pivot_longer(
+    cols = contains("Season"),
+    names_to = "Season",
+    values_to = "Words"
+  )
+
+friends_tidy
+```
+
 
 
 
@@ -94,6 +110,10 @@ We can do this by writing it to a file within our directory.
 2. Call the file that is being created "`friends_tidy.csv`".
 3. Name your code chunk `writing_file`
 
+```{r}
+friends_tidy%>%
+  write_csv(here::here("friends_tidy.csv"))
+```
 
 
 
@@ -114,6 +134,9 @@ This is the same information that we were just worked with, but structured in a 
 3. Name this code chunk `read_season_file`.
 
 
+```{r}
+by_season <- read_csv(here::here("data","by_season.csv"))
+```
 
 
 Now, 
@@ -122,6 +145,16 @@ Now,
 2. Assign it to an object called `speaker_tidy`, and
 3. Name the code chunk `pivot_speaker`.
 
+```{r}
+season_tidy <- by_season %>% 
+  pivot_longer(
+    cols = !contains("Season"),
+    names_to = "Speaker",
+    values_to = "Words"
+  )
+
+season_tidy
+```
 
 
 
@@ -129,10 +162,27 @@ Now,
 
 If you were to use `by_season` and your skills from past activities, describe (or code) how you would obtain the total number of words spoken by each season and the total words spoken across the series (challenge, can you display this information in one table?).
 
+```{r}
+season_tidy%>%
+    group_by(season)%>%
+      summarise(Words = sum(Words))
+
+season_tidy%>%
+    group_by(season)%>%
+      summarise(Words = sum(Words))%>%
+        summarise(Words = sum(Words))
+```
+
+
 **Response**:
 
 
 If you were to use `by_speaker` and your skills from past activities, describe (or code) how you would obtain the total number of words spoken by each season and the total words spoken across the series (challenge, can you display this information in one table?).
+
+```{r}
+
+
+```
 
 **Response**:
 
